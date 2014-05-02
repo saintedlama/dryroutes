@@ -3,7 +3,7 @@ var mongodb = require('mongojs');
 
 // # Dry your routes
 //
-// Route handlers have 4 basic steps - everywhere in every app. Really. Trust me
+// Route handlers have 4 basic steps - *everywhere* in *every* app
 //
 // * validate
 // * act
@@ -12,10 +12,10 @@ var mongodb = require('mongojs');
 //
 
 //
-// ## Take this router, it lists tasks
+// ## Take this route, it lists tasks
 //
-// * prepare Load tasks from db.tasks collection
-// * render Combined with prepare cause setting title to "Task List" is preparing something
+// * prepare: Load tasks from db.tasks collection
+// * render: res.render triggers rendering and selects the view
 //
 module.exports.list = function(req, res, next){
   db.tasks.find({completed: false}).toArray(function(error, tasks){
@@ -29,65 +29,57 @@ module.exports.list = function(req, res, next){
 };
 
 //
-// ## Let's investigate some piece of code that modifies something.
-// This code adds an item to a tasks list
+// ## Lets see how adding a task works
 //
-// We should see something like
-// * validate
-// * act
-// * prepare
-// * render
+// * validate: ok well quite simple but validates
+// * act: db.tasks.save
+// * prepare: errors
+// * render: res.redirect is rendering since we talk HTTP
 module.exports.add = function(req, res, next){
-  // validate, ok well quite simple but validates
   if (!req.body || !req.body.name) return next(new Error('No data provided.'));
 
-  // act, we do something
   db.tasks.save({
     name: req.body.name,
     completed: false
   }, function(error, task){
 
-    // Prepare!
     if (error) return next(error);
     if (!task) return next(new Error('Failed to save.'));
 
-    // render, redirecting is render since we're talking HTTP here
     res.redirect('/tasks');
   })
 };
 
 //
-// Next piece of code that does something
+// ## Mark all tasks as completed
 //
+// * validate: ok well quite simple but validates
+// * act: db.tasks.update
+// * prepare: errors
+// * render: res.redirect
 module.exports.markAllCompleted = function(req, res, next) {
-  // validate
   if (!req.body.all_done || req.body.all_done !== 'true') return next();
 
-  // act
   db.tasks.update({
     completed: false
   }, {$set: {
     completed: true
   }}, {multi: true}, function(error){
-    // prepare
     if (error) return next(error);
 
-    // render
     res.redirect('/tasks');
   })
 };
 
 //
-// Some read operation as contrast:
+// ## Select only completed tasks
 //
-// prepare
-// render
+// * prepare: db.tasks.find
+// * render: res.render
 //
-module.exports.completed = function(req, res, next) {
-  // prepare
+module.exports.completed = function(req, res) {
   db.tasks.find({completed: true}).toArray(function(error, tasks) {
 
-    // render
     res.render('tasks_completed', {
       title: 'Completed',
       tasks: tasks || []
@@ -96,92 +88,74 @@ module.exports.completed = function(req, res, next) {
 };
 
 //
-// Let's mark all tasks as completed
+// ## Let's mark all tasks as completed
 //
 module.exports.markCompleted = function(req, res, next) {
-  // validate
   if (!req.body.completed) return next(new Error('Param is missing'));
 
-  // act
   db.tasks.updateById(req.task._id, {$set: {completed: req.body.completed === 'true'}}, function(error, count) {
-    // prepare
     if (error) return next(error);
     if (count !==1) return next(new Error('Something went wrong.'));
 
-    // render
     res.redirect('/tasks');
   })
 };
 
 //
-// Last one, delete a task
+// ## Last one, delete a task
 //
 module.exports.del = function(req, res, next) {
-  // act
   db.tasks.removeById(req.task._id, function(error, count) {
-    // prepare
     if (error) return next(error);
     if (count !==1) return next(new Error('Something went wrong.'));
 
-    // render
     res.send(200);
   });
 };
 
 //
-// Let's clean that mess up it does not seem dry
+// # You see it?
+// ## It's always validate, act, prepare, render
+// ## So why do we duplicate that much code?
 //
-// 1. Extract our app
+// # Let's clean that mess up
 //
-// Just the interface we'll fill the code later
+// ## Extract our app interface
+//
 var tasks = {
-  all : function() {
-    return db.tasks.find({completed: false});
-  },
-
-  completed : function() {
-
-  },
-
-  add : function() {
-
-  },
-
-  complete : function() {
-
-  },
-
-  completeAll : function() {
-
-  },
-
-  del : function() {
-
-  }
+  all : function() {},
+  completed : function() {},
+  add : function() {},
+  complete : function() {},
+  completeAll : function() {},
+  del : function() {}
 };
 
 //
-// 2. Let's list tasks
+// ## Listing tasks more dry
 //
 module.exports.list = function(req, res){
-  var model = {
+  res.render('tasks', {
     title : 'Todo List',
     tasks : tasks.all()
-  };
-
-  res.render('tasks', model);
+  });
 };
 
 //
-// Nicer? Yes! Working? No!
+// ## Nicer? Yes! Working? No!
 //
 
-// 1. We need logic to query tasks - only return our cursor in this case
+//
+// ## Deferred loading
+// We need logic to query tasks - only return our cursor in this case
+//
 tasks.all = function() {
   return db.tasks.find({completed: false});
 };
 
-// 2. We need something to "prepare" views without messing around with promises of getting called back
+//
+// We need to resolve model cursor properties
+//
 var render = function(req, res, view, model) {
   var cursors = [];
 
@@ -204,9 +178,8 @@ var render = function(req, res, view, model) {
   var i=0;
 
   var pickNext = function(err) {
-    // TODO: Handle err
     if (err) {
-      console.log(err);
+      return next(err);
     }
 
     if (i < cursors.length) {
@@ -222,18 +195,16 @@ var render = function(req, res, view, model) {
   pickNext();
 };
 
-// Our new implementation of the list handler
+// ## Our new implementation of the list handler
 module.exports.list = function(req, res){
-  var model = {
+  render(req, res, 'tasks', {
     title : 'Todo List',
     tasks : tasks.all()
-  };
-
-  render(req, res, 'tasks', model);
+  });
 };
 
 //
-// Nicer? Yes! Works? Yes! Could it be nicer? Yes!
+// ## Nicer? Yes! Works? Yes! Could it be nicer? Yes!
 //
 // 1. Render takes too many arguments
 // 2. View names are repeated
@@ -242,7 +213,9 @@ module.exports.list = function(req, res){
 //
 // Override res.render in some middleware - But here? In this file?
 //
-// The first lie of routes - routes and route handlers are non independent parts
+
+//
+// ## The first lie of routes - routes and route handlers are non independent parts
 // But! Your app is not the route handler
 // The route handler is the interface between HTTP and your app
 //
@@ -352,9 +325,9 @@ var tasks = {
   },
 
   complete : function(taskId, next) {
-    db.tasks.updateById(taskId, {$set: { completed: true }}, function(error, count) {
+    db.tasks.update({ _id : new db.ObjectId(taskId) }, {$set: { completed: true }}, function(error, count) {
       if (error) return next(error);
-      if (count !==1) return next(new Error('Could not mark task completed with id ' + taskId));
+      if (count !== 1) return next(new Error('Could not mark task completed with id ' + taskId));
 
       next();
     })
@@ -368,7 +341,9 @@ var tasks = {
   },
 
   del : function(taskId, next) {
-    db.tasks.removeById(taskId, function(error, count) {
+    db.tasks.remove({ _id : new db.ObjectId(taskId) }, function(error, count) {
+      console.log('error, count', error, count);
+
       if (error) return next(error);
       if (count !==1) return next(new Error('Could not delete task with id ' + taskId));
 
@@ -394,7 +369,7 @@ module.exports.add = function(req, res, next){
 };
 
 module.exports.markAllCompleted = function(req, res, next) {
-  tasks.markAllCompleted(function(err) {
+  tasks.completeAll(function(err) {
     if (err) return next(err);
 
     res.success();
@@ -409,7 +384,7 @@ module.exports.completed = function(req, res) {
 };
 
 module.exports.markCompleted = function(req, res, next) {
-  tasks.markCompleted(req.task._id, function(err) {
+  tasks.complete(req.params.task_id, function(err) {
     if (err) return next(err);
 
     res.success();
@@ -417,9 +392,9 @@ module.exports.markCompleted = function(req, res, next) {
 };
 
 module.exports.del = function(req, res, next) {
-  tasks.del(req.task._id, function(err) {
+  tasks.del(req.params.task_id, function(err) {
     if (err) { return next(err); }
 
-    res.success();
+    res.send(200);
   });
 };
