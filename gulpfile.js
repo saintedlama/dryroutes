@@ -8,7 +8,7 @@ gulp.task('clean-doc', function() {
 
 gulp.task('doc', ['clean-doc'], function() {
   return gulp.src(['!node_modules/**/*.js', '**/*.js'])
-    .pipe(p.docco())
+    .pipe(p.docco({ layout : 'linear' }))
     .pipe(gulp.dest('doc'));
 });
 
