@@ -1,7 +1,3 @@
-
-/**
- * Module dependencies.
- */
 var express = require('express');
 var routes = require('./routes');
 var tasks = require('./routes/tasks');
@@ -11,7 +7,6 @@ var app = express();
 
 app.locals.appname = 'Express.js Todo App';
 
-// all environments
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
@@ -25,6 +20,7 @@ app.use(express.csrf());
 
 app.use(require('less-middleware')({ src: __dirname + '/public', compress: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(function(req, res, next) {
   res.locals._csrf = req.session._csrf;
   return next();
@@ -37,23 +33,10 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.param('task_id', function(req, res, next, taskId) {
-  req.db.tasks.findById(taskId, function(error, task){
-    if (error) return next(error);
-    if (!task) return next(new Error('Task is not found.'));
-    req.task = task;
-    return next();
-  });
-});
-
 var loadCursor = require('./lib/load_cursor');
 var lookupView = require('./lib/lookup_view');
 var validate = require('./lib/validate');
 var success = require('./lib/success');
-
-app.get('/', routes.index);
-
-app.get('/tasks', loadCursor, lookupView, tasks.list);
 
 var validateAddTask = function(req, res, next) {
   if (!req.body || !req.body.name) return next(new Error('No data provided.'));
@@ -61,14 +44,13 @@ var validateAddTask = function(req, res, next) {
   next();
 };
 
+app.get('/', routes.index);
+app.get('/tasks', loadCursor, lookupView, tasks.list);
 app.post('/tasks', validate(validateAddTask), loadCursor, lookupView, success, tasks.add);
+app.post('/tasks/complete', success, tasks.markAllCompleted);
+app.post('/tasks/:task_id', success, tasks.markCompleted);
+app.del('/tasks/:task_id', success, tasks.del);
 
-// TODO: validate
-// if (!req.body.all_done || req.body.all_done !== 'true') return next();
-app.post('/tasks', tasks.markAllCompleted);
-
-app.post('/tasks/:task_id', tasks.markCompleted);
-app.del('/tasks/:task_id', tasks.del);
 app.get('/tasks/completed', loadCursor, lookupView, tasks.completed);
 
 app.all('*', function(req, res){
