@@ -16,8 +16,7 @@ block content
   .list
     .item.add-task
       div.action
-        form(action='/tasks', method='post')
-          input(type='hidden', value='true', name='all_done')
+        form(action='/tasks/complete', method='post')
           input(type='hidden', value=locals._csrf, name='_csrf')
           input(type='submit', class='btn btn-success btn-xs', value='all done')
       form(action="/tasks", method='post')
