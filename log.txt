@@ -1,0 +1,13 @@
+3 May 10:23:24 - [33m[nodemon] v1.0.17[39m
+3 May 10:23:24 - [33m[nodemon] to restart at any time, enter `rs`[39m
+3 May 10:23:24 - [33m[nodemon] watching: *.*[39m
+3 May 10:23:24 - [32m[nodemon] starting `node app.js`[39m
+Express server listening on port 3000
+[90mPOST /tasks [36m302 [90m51ms - 60b[0m
+[90mGET / [36m304 [90m340ms[0m
+[90mGET /stylesheets/style.css [36m304 [90m6ms[0m
+[90mGET /javascripts/jquery.js [36m304 [90m3ms[0m
+[90mGET /javascripts/main.js [36m304 [90m3ms[0m
+[90mGET /stylesheets/main.css [32m200 [90m388ms - 226b[0m
+[90mGET /bootstrap/bootstrap.css [32m200 [90m409ms - 96.03kb[0m
+Terminate batch job (Y/N)? 

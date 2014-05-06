@@ -5,11 +5,12 @@ block content
     h2 Menu
     ul.nav.nav-pills
       li.active
-        a(href="/tasks") Home
+        a(href="/") Home
       li
         a(href="/tasks") Todo List
       li
-        a(href="/tasks") Completed
+        // TODO: Extract this as partial!
+        a(href="/tasks/complete") Completed
   .home
     p This is an example of classical (no front-end JavaScript frameworks) web application built with Express.js 3.3.5 for 
       a(href="http://expressjsguide.com") Express.js Guide

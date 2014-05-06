@@ -9,11 +9,6 @@ var less = require('less-middleware');
 var routes = require('./routes/index');
 var tasks = require('./routes/tasks');
 
-var loadCursor = require('./lib/load_cursor');
-var lookupView = require('./lib/lookup_view');
-var validate = require('./lib/validate');
-var success = require('./lib/success');
-
 var http = require('http');
 
 var app = express();
@@ -34,20 +29,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.locals.appname = 'Express.js Todo App';
 
-var validateAddTask = function(req, res, next) {
-  if (!req.body || !req.body.name) return next(new Error('No data provided.'));
+app.use(routes());
 
-  next();
-};
-
-app.get('/', routes.index);
-app.get('/tasks', loadCursor, lookupView, tasks.list);
-app.post('/tasks', validate(validateAddTask), loadCursor, lookupView, success, tasks.add);
-app.post('/tasks/complete', success, tasks.markAllCompleted);
-app.post('/tasks/:task_id', success, tasks.markCompleted);
-app.del('/tasks/:task_id', tasks.del);
-app.get('/tasks/completed', loadCursor, lookupView, tasks.completed);
-
+app.use('/tasks', tasks());
 
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {

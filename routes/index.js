@@ -1,6 +1,14 @@
+var express = require('express');
+
 //
 // GET home page.
 //
-exports.index = function(req, res){
-  res.render('index', { title: 'Express.js Todo App' });
+module.exports = function() {
+  var router = new express.Router();
+
+  router.get('/', function(req, res) {
+    res.render('index', { title: 'Express.js Todo App' });
+  });
+
+  return router;
 };

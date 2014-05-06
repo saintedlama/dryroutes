@@ -1,0 +1,7 @@
+extends layout
+
+// TODO: Don't use the standard layout!
+block content
+  h1= message
+  h2= error.status
+  pre #{error.stack}
