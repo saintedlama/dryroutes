@@ -1,4 +1,4 @@
-var mount = require('../lib/mount');
+var mount = require('../middleware/mount');
 var expect = require('chai').expect;
 
 var createRequest = function(url, originalUrl) {

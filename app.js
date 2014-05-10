@@ -24,7 +24,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
-app.use(less({ src: __dirname + '/public', compress: true }));
+app.use(less(path.join(__dirname + '/public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.locals.appname = 'Express.js Todo App';
