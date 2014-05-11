@@ -1,5 +1,5 @@
 // # Dry Routes with Express
-// Don't repeat yourself build your own conventions!
+// Don't repeat yourself by build your own conventions!
 
 // ## Anatomy of a Route
 // * Routes and route handlers depend on each other (TODO: Ghost example!)
