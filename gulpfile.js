@@ -6,9 +6,14 @@ gulp.task('clean-doc', function() {
     .pipe(p.clean());
 });
 
-gulp.task('doc', ['clean-doc'], function() {
-  return gulp.src(['!node_modules/**/*.js', '**/*.js'])
-    .pipe(p.docco({ layout : 'linear' }))
+gulp.task('copy-assets', function() {
+  return gulp.src(['docgen/public/**', 'docgen/public/docco.css'])
+    .pipe(gulp.dest('doc/public'));
+});
+
+gulp.task('doc', ['copy-assets'], function() {
+  return gulp.src(['./routes/tasks.js'])
+    .pipe(p.docco({  template: 'docgen/docco.jst' }))
     .pipe(gulp.dest('doc'));
 });
 
