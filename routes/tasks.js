@@ -136,36 +136,34 @@ var validateAddTask = function(req, res, next) {
 //
 var tasks = require('../tasks');
 
-// ## Setup the router
-// Pulled to the bottom to reveal our routes
-//
-// * Creates a router
-// * register router middleware
-// * register routes
-//
+// ## Mount middleware
+// Sets req.mount field to access the url path part this routes were mounted to
+// Someone forgot to expose the mount url in express.js
+var mount = require('../middleware/mount');
 
-// ## Success middleware
+// ## Redirect middleware
 // Used to redirect to a 'success' url after a route handler succeeded
 var redirect = require('../middleware/redirect');
 
 // ## Load deferred middleware
-// Loads any cursor, promise and callbacks to avoid async callback hell
+// Loads any mongodb cursor (promise and callbacks) to avoid async callback hell
 // when rendering views.
-// TODO: Move to  view and make view more versatile - including callback and promise!
 var deferred = require('../middleware/deferred');
 
-// ## Mount middleware
-// Sets req.mount field to access the url path part this routes were mounted to
-var mount = require('../middleware/mount');
-
 // ## View middleware
-// Sets req.view fields using conventions
-// Create a view function passing the 'tasks' hint as directory to locate task views
+// Sets req.view fields using conventions.
 var view = require('../middleware/view');
 
 // ## Render middleware
+// Uses view and model fields from __req__ to render the view via __res.render__
 var render = require('../middleware/render');
 
+// ## Setup the router
+//
+// * Creates a router
+// * Register router middleware
+// * Register routes
+//
 module.exports = function() {
   var express = require('express');
 
