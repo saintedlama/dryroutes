@@ -41,8 +41,6 @@ var tasks = {
 
   del : function(taskId, next) {
     db.tasks.remove({ _id : new db.ObjectId(taskId) }, function(error, count) {
-      console.log('error, count', error, count);
-
       if (error) return next(error);
       if (count !==1) return next(new Error('Could not delete task with id ' + taskId));
 

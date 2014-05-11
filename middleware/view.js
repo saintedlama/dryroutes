@@ -17,14 +17,16 @@ module.exports = function(directory) {
   }
 
   return function(req, res, next) {
-    var urlPath = req.route.path;
+    var urlPath = req.url;
 
     if (urlPath == '/') {
       req.view = join(directory, 'index');
+
       return next();
     }
 
-    req.view = join(directory, req.route.path.substring(1).replace(/\//gmi, '_'));
+    req.view = join(directory, urlPath.substring(1).replace(/\//gmi, '_'));
+
     next();
   }
 };
