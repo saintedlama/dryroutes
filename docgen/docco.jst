@@ -8,14 +8,21 @@
   <link rel="stylesheet" media="all" href="public/css/docco.css" />
 
   <script src="bower_components/angular/angular.js"></script>
+
   <script src="bower_components/angular-animate/angular-animate.js"></script>
   <script src="bower_components/gsap/src/minified/TweenMax.min.js"></script>
   <script src="bower_components/ng-Fx/dist/ng-Fx.min.js"></script>
 
-  <script>
-    var app = angular.module('presentationApp', ['ngAnimate', 'fx.animations']);
+  <script src="bower_components/mousetrap/mousetrap.min.js"></script>
+  <script src="bower_components/angular-hotkeys/build/hotkeys.min.js"></script>
 
-    app.controller('PresentationCtrl', function($scope, $timeout) {
+  <script>
+    var app = angular.module('presentationApp', ['ngAnimate', 'fx.animations', 'cfp.hotkeys']);
+    app.config(function(hotkeysProvider) {
+      hotkeysProvider.includeCheatSheet = false;
+    });
+
+    app.controller('PresentationCtrl', function($scope, hotkeys) {
       $scope.currentSlide = 0;
       $scope.slideCount = 0;
 
@@ -42,6 +49,12 @@
         $scope.currentSlide = $scope.slideCount - 1;
         return $scope.currentSlide;
       };
+
+      hotkeys.add('down', 'Next Slide', $scope.next);
+      hotkeys.add('ctrl+down', 'Last Slide', $scope.last);
+
+      hotkeys.add('up', 'Previous Slide', $scope.prev);
+      hotkeys.add('ctrl+up', 'First Slide', $scope.first);
     });
   </script>
 </head>
@@ -50,6 +63,7 @@
   <a ng-click="prev()">prev</a>
   <a ng-click="next()">next</a>
   <a ng-click="last()">last</a>
+  <span>{{currentSlide + 1}}/{{slideCount}}</span>
 
   <div class="container">
     <div class="page">
