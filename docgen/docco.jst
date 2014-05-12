@@ -5,6 +5,7 @@
   <title><%= title %></title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <link rel="stylesheet" media="all" href="public/css/normalize.css" />
+  <link rel="stylesheet" media="all" href="bower_components/open-sans-fontface/open-sans.css" />
   <link rel="stylesheet" media="all" href="public/css/docco.css" />
 
   <script src="bower_components/angular/angular.js"></script>
@@ -59,16 +60,18 @@
   </script>
 </head>
 <body ng-app="presentationApp" ng-controller="PresentationCtrl" ng-init="slideCount=<%=sections.length%>">
-  <a ng-click="first()">first</a>
-  <a ng-click="prev()">prev</a>
-  <a ng-click="next()">next</a>
-  <a ng-click="last()">last</a>
-  <span>{{currentSlide + 1}}/{{slideCount}}</span>
+  <div class="presentation-controls">
+    <a ng-click="first()">first</a>
+    <a ng-click="prev()">prev</a>
+    <a ng-click="next()">next</a>
+    <a ng-click="last()">last</a>
+    <span>{{currentSlide + 1}}/{{slideCount}}</span>
+  </div>
 
   <div class="container">
     <div class="page">
       <% for (var i = 0, l = sections.length; i<l; i++) { %>
-        <section class="fx-rotate-counterclock fx-easing-bounce fx-speed-800" ng-show="isCurrentSlide(<%=i%>)">
+        <section class="fx-zoom-up" ng-show="isCurrentSlide(<%=i%>)">
         <% var section = sections[i]; %>
         <%= section.docsHtml %>
         <% if (!(/^\s*$/).test(section.codeText)) { %>

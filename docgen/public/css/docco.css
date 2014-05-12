@@ -1,49 +1,7 @@
-/*--------------------- Typography ----------------------------*/
-
-@font-face {
-    font-family: 'aller-light';
-    src: url('../fonts/aller-light.eot');
-    src: url('../fonts/aller-light.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/aller-light.woff') format('woff'),
-         url('../fonts/aller-light.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'aller-bold';
-    src: url('../fonts/aller-bold.eot');
-    src: url('../fonts/aller-bold.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/aller-bold.woff') format('woff'),
-         url('../fonts/aller-bold.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'novecento-bold';
-    src: url('../fonts/novecento-bold.eot');
-    src: url('../fonts/novecento-bold.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/novecento-bold.woff') format('woff'),
-         url('../fonts/novecento-bold.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'fleurons';
-    src: url('../fonts/fleurons.eot');
-    src: url('../fonts/fleurons.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/fleurons.woff') format('woff'),
-         url('../fonts/fleurons.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
 /*--------------------- Base Styles ----------------------------*/
 
 body {
-  font-family: "aller-light";
+  font-family: "Open Sans";
   background: #fff;
   background-size: 322px;
   margin: 0;
@@ -57,8 +15,8 @@ hr {
 
 h1, h2, h3, h4, h5, h6 {
   color: #112233;
-  font-weight: normal;
-  font-family: "novecento-bold";
+  font-weight: bold;
+  font-family: "Open Sans";
   text-transform: uppercase;
   line-height: 1em;
   margin-top: 50px;
@@ -70,22 +28,14 @@ h1, h2, h3, h4, h5, h6 {
   h2 {
     font-size: 1.3em;
   }
-  h1:after {
-    content: "8";
-    display: block;
-    font-family: "fleurons";
-    color: #999;
-    font-size: 80px;
-    padding: 10px 0 25px;
-  }
 
 a {
   color: #000;
 }
 
 b, strong {
-  font-weight: normal;
-  font-family: "aller-bold";
+  font-weight: bold;
+  font-family: "Open Sans";
 }
 
 blockquote {
@@ -126,14 +76,6 @@ pre, tt, code {
       padding: 0;
       background: transparent;
     }
-
-.fleur {
-  font-family: "fleurons";
-  font-size: 100px;
-  text-align: center;
-  margin: 40px 0;
-  color: #ccc;
-}
 
 /*--------------------- Layout ----------------------------*/
 
@@ -190,10 +132,12 @@ ul.sections {
     list-style-type: upper-roman;
   }
     .toc li {
-      font-family: 'novecento-bold';
+      font-weight: bold;
+      font-family: 'Open Sans';
     }
       .toc li a {
-        font-family: 'aller-light';
+        font-weight: bold;
+        font-family: 'Open Sans';
       }
 
 
