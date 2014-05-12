@@ -60,7 +60,7 @@
   </script>
 </head>
 <body ng-app="presentationApp" ng-controller="PresentationCtrl" ng-init="slideCount=<%=sections.length%>">
-  <div class="presentation-controls">
+  <div class="presentation-controls" ng-show="false">
     <a ng-click="first()">first</a>
     <a ng-click="prev()">prev</a>
     <a ng-click="next()">next</a>
