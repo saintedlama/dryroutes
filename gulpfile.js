@@ -6,8 +6,9 @@ gulp.task('clean-doc', function() {
     .pipe(p.clean());
 });
 
+// TODO: Base directory got wrong here!
 gulp.task('copy-assets', function() {
-  return gulp.src(['docgen/public/**', 'docgen/public/docco.css'])
+  return gulp.src(['docgen/public/**', 'docgen/bower_components/**', 'docgen/public/docco.css'])
     .pipe(gulp.dest('doc/public'));
 });
 

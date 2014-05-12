@@ -1,0 +1,19 @@
+{
+  "name": "docgen",
+  "version": "0.0.0",
+  "homepage": "https://github.com/azat-co/todo-express",
+  "authors": [
+    "saintelama <christoph.walcher@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "ng-Fx": "~0.4.0",
+  }
+}

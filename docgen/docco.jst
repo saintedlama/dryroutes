@@ -6,54 +6,55 @@
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <link rel="stylesheet" media="all" href="public/css/normalize.css" />
   <link rel="stylesheet" media="all" href="public/css/docco.css" />
-  <script src="public/js/jquery-1.8.1.min.js"></script>
-  <script src="public/js/presenteer.js"></script>
-  <script src="public/js/sylvester.js"></script>
+
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-animate/angular-animate.js"></script>
+  <script src="bower_components/gsap/src/minified/TweenMax.min.js"></script>
+  <script src="bower_components/ng-Fx/dist/ng-Fx.min.js"></script>
 
   <script>
-    $(function() {
-      presentation = new Presenteer(
-        '.page',
-          $('.page > h2'),
-          { followElementTransforms: false }
-      );
+    var app = angular.module('presentationApp', ['ngAnimate', 'fx.animations']);
+
+    app.controller('PresentationCtrl', function($scope, $timeout) {
+      $scope.currentSlide = 0;
+      $scope.slideCount = 0;
+
+      $scope.isCurrentSlide = function(idx) {
+        return idx == $scope.currentSlide;
+      };
+
+      $scope.next = function() {
+        $scope.currentSlide = Math.min($scope.slideCount - 1, $scope.currentSlide + 1);
+        return $scope.currentSlide;
+      };
+
+      $scope.prev = function() {
+        $scope.currentSlide = Math.max(0, $scope.currentSlide - 1);
+        return $scope.currentSlide;
+      };
+
+      $scope.first = function() {
+        $scope.currentSlide = 0;
+        return $scope.currentSlide;
+      };
+
+      $scope.last = function() {
+        $scope.currentSlide = $scope.slideCount - 1;
+        return $scope.currentSlide;
+      };
     });
   </script>
 </head>
-<body>
+<body ng-app="presentationApp" ng-controller="PresentationCtrl" ng-init="slideCount=<%=sections.length%>">
+  <a ng-click="first()">first</a>
+  <a ng-click="prev()">prev</a>
+  <a ng-click="next()">next</a>
+  <a ng-click="last()">last</a>
+
   <div class="container">
     <div class="page">
-
-      <div class="header">
-        <% if (hasTitle) { %>
-          <% var section = sections.shift(); %>
-          <%= section.docsHtml %>
-          <% if (!(/^\s*$/).test(section.codeText)) { %>
-            <%= section.codeHtml %>
-          <% } %>
-        <% } else { %>
-          <h1><%= title %></h1>
-        <% } %>
-
-        <% if (sources.length > 1) { %>
-          <div class="toc">
-            <h3>Table of Contents</h3>
-            <ol>
-              <% for (var i=0, l = sources.length; i < l; i++) { %>
-                <% var source = sources[i]; %>
-                <li>
-                  <a class="source" href="<%= path.basename(destination(source)) %>">
-                    <%= path.basename(source) %>
-                  </a>
-                </li>
-              <% } %>
-            </ol>
-          </div>
-        <% } %>
-      </div>
-
       <% for (var i = 0, l = sections.length; i<l; i++) { %>
-        <section>
+        <section class="fx-rotate-counterclock fx-easing-bounce fx-speed-800" ng-show="isCurrentSlide(<%=i%>)">
         <% var section = sections[i]; %>
         <%= section.docsHtml %>
         <% if (!(/^\s*$/).test(section.codeText)) { %>
@@ -61,7 +62,6 @@
         <% } %>
         </section>
       <% } %>
-      <div class="fleur">h</div>
     </div>
   </div>
 </body>
