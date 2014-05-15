@@ -1,8 +1,19 @@
-> Todo app with Express.js
+# Dry Routes Express
 
-This is an example of classical (no front-end JavaScript frameworks) web application built with Express.js 3.3.5.
-The full source code is available at [github.com/azat-co/todo-express](http://github.com/azat-co/todo-express).
+This app uses "Todo app with Express.js" taken from [github.com/azat-co/todo-express](http://github.com/azat-co/todo-express) to demonstrate how to put your route handlers on a diet.
 
-More Express.js in [Express.js Guide](http://expressjsguide.com).
+## Running
 
-More Node.js frameworks at [nodeframework.com](http://nodeframework.com).
+    https://github.com/saintedlama/dryroutes.git
+
+    cd dryroutes
+
+    npm install
+
+# Self contained Presentation
+
+To build/see the self contained presentation run gulp from the command line
+
+   gulp
+
+Then fire up your browser and open file `doc/tasks.html`.
