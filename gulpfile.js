@@ -6,8 +6,8 @@ gulp.task('clean-doc', function() {
     .pipe(p.clean());
 });
 
-gulp.task('copy-bower', function() {
-  return gulp.src('docgen/bower_components/**')
+gulp.task('bower', function() {
+  return p.bower()
     .pipe(gulp.dest('doc/bower_components'));
 });
 
@@ -16,8 +16,7 @@ gulp.task('copy-docco', function() {
     .pipe(gulp.dest('doc/public'));
 });
 
-
-gulp.task('copy', ['copy-bower', 'copy-docco'], function() {
+gulp.task('copy', ['bower', 'copy-docco'], function() {
   return gulp.src(['docgen/public/**'])
     .pipe(gulp.dest('doc/public'));
 });
